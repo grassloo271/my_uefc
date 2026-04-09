@@ -39,6 +39,10 @@ def opt_obj(UEFC):
     S_lowerBound = 0.05
     S_upperBound = 0.5
 
+    payload_loc = 0.2
+    payload_lower = -0.1
+    payload_upper = 0.5
+
     # R_initialGuess = 6.0
     # R_lowerBound   = 0.1
     # R_upperBound   = 12.5
@@ -47,9 +51,9 @@ def opt_obj(UEFC):
     # mpay_lowerBound   = 0.01
     # mpay_upperBound   = 1000.
     
-    initialGuess = (N_initialGuess, l_AR_initialGuess, l_m_initialGuess, AR_initialGuess, S_initialGuess)
+    initialGuess = (N_initialGuess, l_AR_initialGuess, l_m_initialGuess, AR_initialGuess, S_initialGuess, payload_loc)
     
-    bounds       = Bounds(lb=(N_lowerBound, l_AR_lowerBound, l_m_lowerBound, AR_lowerBound, S_lowerBound), ub=(N_upperBound, l_AR_upperBound, l_m_upperBound, AR_upperBound, S_upperBound), keep_feasible=True)
+    bounds       = Bounds(lb=(N_lowerBound, l_AR_lowerBound, l_m_lowerBound, AR_lowerBound, S_lowerBound, payload_lower), ub=(N_upperBound, l_AR_upperBound, l_m_upperBound, AR_upperBound, S_upperBound, payload_upper), keep_feasible=True)
 
     # Constraint format is different, depending on algorithm.
     method = "SLSQP"

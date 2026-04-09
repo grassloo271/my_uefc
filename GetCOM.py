@@ -23,7 +23,7 @@ def plot_plane_cg(UEFC, opt_vars, AR, S):
     span_t = np.sqrt(Sh * UEFC.AR_h)
     chord_t = np.sqrt(Sh / UEFC.AR_h)
     tail_pos = mass_dict["tail"][1]
-    
+
     tail = patches.Rectangle((tail_pos - chord_t/4, -span_t/2), chord_t, span_t, 
                              linewidth=2, edgecolor='blue', facecolor='skyblue', 
                              alpha=0.3, label='Wing Planform')
@@ -83,7 +83,8 @@ def GetMassBreakdown(UEFC, opt_vars, AR, S):
         "radio + batt" : [0.132 + 0.0091+ 0.012, 0.5 * c_bar], 
         "servos" : [0.016, 1.5 * c_bar],
         "boom" : [0.0389 * (opt_vars[1] - opt_vars[2]) *b /0.92,  (opt_vars[1] + opt_vars[2]) * b /2 ],
-        "push_rods" : [.024 *  ( opt_vars[1] * b - 1.5 * c_bar )/ (0.92 - 0.17 - 1.5 * 0.15), ( 1.5 * c_bar + opt_vars[1] * b) /2]
+        "push_rods" : [.024 *  ( opt_vars[1] * b - 1.5 * c_bar )/ (0.92 - 0.17 - 1.5 * 0.15), ( 1.5 * c_bar + opt_vars[1] * b) /2],
+        "payload" : [0.25, opt_vars[5] * b]
     }
     return mass_breakdown
 

@@ -6,10 +6,10 @@ def GetNP(UEFC, opt_vars, AR, S):
 
     a_w = np.pi * 2 / (1 + 2 / AR)
     a_h = 2 * np.pi /(1 + 2/ UEFC.AR_h)  
-    c = np.sqrt(S / AR)
-    b = np.sqrt(S * AR)
+    c = UEFC.wing_dimensions(opt_vars, AR, S)["Mean chord"]
+    b = UEFC.wing_dimensions(opt_vars, AR, S)["Span"]
 
-    l_h = b * UEFC.l_AR
+    l_h = b * opt_vars[1]
 
     V_h = UEFC.Sh * l_h / (S * c)
     
