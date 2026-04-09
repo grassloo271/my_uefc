@@ -1,6 +1,8 @@
 import numpy as np
 
 def GetCD(UEFC, opt_vars, AR, S):
+    AR = opt_vars[3]
+    S = opt_vars[4]
 
     # HINT: we have functions for these in the UEFC calss
 

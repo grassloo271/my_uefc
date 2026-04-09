@@ -1,5 +1,7 @@
 def GetMass(UEFC, opt_vars, AR, S):
-    
+    AR = opt_vars[3]
+    S = opt_vars[4]
+
     # Returns the total mass, as well as a breakdown, in g. 
 
     # YOU SHOULD NOT NEED TO CHANGE THIS FILE FOR THIS PROBLEM 

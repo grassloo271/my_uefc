@@ -1,7 +1,9 @@
 # YOU SHOULD NOT NEED TO CHANGE THIS FILE FOR THIS PROBLEM
 import numpy as np
 
-def GetWingDimensions(UEFC, AR, S):
+def GetWingDimensions(UEFC, opt_vars, AR, S):
+    AR = opt_vars[3]
+    S = opt_vars[4]
 
     taper = UEFC.taper
 

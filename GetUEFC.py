@@ -75,18 +75,24 @@ class UEFC:
     def fuselage_weight(self, opt_vars, AR, S):
         return GetWfuse(self, opt_vars, AR, S)  # Fuselage weight (N)
 
-    def wing_weight(self, AR, S):
-        return GetWingWeight(self, AR, S)  # Wing weight (N)
+    def wing_weight(self, opt_vars, AR, S):
+        return GetWingWeight(self, opt_vars, AR, S)  # Wing weight (N)
     
     def horizontal_tail_coeff(self, opt_vars, AR, S):
         return GetHorTailVolume(self, opt_vars, AR, S)
+    
+    def plot_plane(self, opt_vars, AR, S):
+        plot_plane_cg(self, opt_vars, AR, S)
     
     def vertical_tail_coeff(self, opt_vars, AR, S):
         return GetVertTailVolume(self, opt_vars, AR, S)
     
     def spiral_coeff(self, opt_vars, AR, S):
         return GetSpiral(self, opt_vars, AR, S)
-
+    
+    def mass_breakdown(self, opt_vars, AR, S):
+        return GetMassBreakdown(self, opt_vars, AR, S)
+    
     def payload_weight(self, opt_vars, AR, S):
         return GetWpay(self, opt_vars, AR, S)  # Payload weight (N)
 
@@ -144,8 +150,8 @@ class UEFC:
     def excess_thrust(self, opt_vars, AR, S):  # Maximum - required thrust (N)
         return GetExcessThrust(self, opt_vars, AR, S)
 
-    def wing_dimensions(self, AR, S):
-        return GetWingDimensions(self, AR, S)
+    def wing_dimensions(self, opt_vars, AR, S):
+        return GetWingDimensions(self, opt_vars, AR, S)
 
     def turn_rate(self, opt_vars, AR, S):  # Turn rate (rad/s)
         return GetOmega(self, opt_vars, AR, S)

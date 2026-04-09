@@ -3,8 +3,9 @@ from scipy.optimize import minimize, Bounds
 from GetUEFC        import UEFC
 from GetObjective   import GetObjective
 
-def opt_obj(UEFC, AR, S):
-
+def opt_obj(UEFC):
+    AR = 1
+    S = 1
     # YOU SHOULD NOT NEED TO CHANGE THIS FUNCTION FOR THIS PROBLEM
 
     # Determine the maximum objective function (velocity)
@@ -16,19 +17,27 @@ def opt_obj(UEFC, AR, S):
     #obj_fcn = lambda opt_vars: -GetObjective(UEFC, opt_vars, AR, S)
 
     # Modification (otherwise solution not always found)
-    obj_fcn = lambda opt_vars: -GetObjective(UEFC, opt_vars, AR, S) * (1./3.)
+    obj_fcn = lambda opt_vars: -GetObjective(UEFC, opt_vars) * (1./3.)
     # optimization variable is the load factor of the turn.
     N_initialGuess = 1.25
     N_lowerBound   = 1.01
     N_upperBound   = 5.0
 
     l_AR_initialGuess = 1 #from wing to tail
-    l_AR_lowerBound =0.5
+    l_AR_lowerBound = 0.2
     l_AR_upperBound = 3
 
-    l_m_initialGuess = -0.2 #similar definition to l_AR but for the motor
+    l_m_initialGuess = -0.3 #similar definition to l_AR but for the motor
     l_m_lowerBound = -0.5
-    l_m_upperBound = 0
+    l_m_upperBound = -.05
+
+    AR_initialGuess = 5
+    AR_lowerBound = 1
+    AR_upperBound = 10
+
+    S_initialGuess = 0.354
+    S_lowerBound = 0.05
+    S_upperBound = 0.5
 
     # R_initialGuess = 6.0
     # R_lowerBound   = 0.1
@@ -37,10 +46,10 @@ def opt_obj(UEFC, AR, S):
     # mpay_initialGuess = 10.
     # mpay_lowerBound   = 0.01
     # mpay_upperBound   = 1000.
-
-    initialGuess = (N_initialGuess, l_AR_initialGuess, l_m_initialGuess)
     
-    bounds       = Bounds(lb=(N_lowerBound, l_AR_lowerBound, l_m_lowerBound), ub=(N_upperBound, l_AR_upperBound, l_m_upperBound), keep_feasible=True)
+    initialGuess = (N_initialGuess, l_AR_initialGuess, l_m_initialGuess, AR_initialGuess, S_initialGuess)
+    
+    bounds       = Bounds(lb=(N_lowerBound, l_AR_lowerBound, l_m_lowerBound, AR_lowerBound, S_lowerBound), ub=(N_upperBound, l_AR_upperBound, l_m_upperBound, AR_upperBound, S_upperBound), keep_feasible=True)
 
     # Constraint format is different, depending on algorithm.
     method = "SLSQP"
@@ -116,7 +125,7 @@ def opt_obj(UEFC, AR, S):
 
     if success:
         opt_vars_maxObj = result.x  # Variables that maximize objective
-        obj_max         = GetObjective(UEFC, opt_vars_maxObj, AR, S)
+        obj_max         = GetObjective(UEFC, opt_vars_maxObj)
 
     else:  # If optimizer fails
         opt_vars_maxObj = np.zeros(np.size(initialGuess))
@@ -133,39 +142,49 @@ if __name__ == "__main__":
 #     S  = (0.1 + 0.2)/2 * 1.5  # m^2
 #     AR = 1.5**2 / S
 
-    S = 0.4
-    AR = 5
-
     aircraft.CLdes = 0.8
     aircraft.mpay_g = 250
     aircraft.dihedral = 5
     
-    aircraft.Sh = 0.04
-    aircraft.Sv = 0.03
+    aircraft.Sh = 0.03
+    aircraft.Sv = 0.01
     # print(aircraft.weight(1.1, AR, S)["Total"], "total")
-    opt_vars_maxobj, obj_max, success = opt_obj(aircraft, AR, S)
+    opt_vars_maxobj, obj_max, success = opt_obj(aircraft)
 
-    print()
-    print("Aspect ratio: %0.4f"     % AR)
-    print("Wing area:    %0.4f m^2" % S)
-
+    AR = opt_vars_maxobj[3]
+    S = opt_vars_maxobj[4]
+    
     print()
     print("Load factor:  %0.3f"   % opt_vars_maxobj[0])
     # print("Turn radius:  %0.2f m" % opt_vars_maxobj[1])
     # print("Payload mass: %0.0f g" % opt_vars_maxobj[2])
 
-    print("Objective: %0.8f m/s" % obj_max)
-
-    print(aircraft.weight(opt_vars_maxobj, AR, S)["Total"]/9.8, "total")
-    print(aircraft.center_of_mass(opt_vars_maxobj, AR, S))
-    print(aircraft.neutral_point(opt_vars_maxobj, AR, S))
+   
+#     print(aircraft.weight(opt_vars_maxobj, AR, S)["Total"]/9.8, "total")
+#     print(aircraft.center_of_mass(opt_vars_maxobj, AR, S))
+#     print(aircraft.neutral_point(opt_vars_maxobj, AR, S))
     
-    print(aircraft.spiral_coeff(opt_vars_maxobj, AR, S))
-    print(aircraft.vertical_tail_coeff(opt_vars_maxobj, AR, S))
-    print(aircraft.horizontal_tail_coeff(opt_vars_maxobj, AR, S))
+#     print(aircraft.spiral_coeff(opt_vars_maxobj, AR, S))
+#     print(aircraft.vertical_tail_coeff(opt_vars_maxobj, AR, S))
+#     print(aircraft.horizontal_tail_coeff(opt_vars_maxobj, AR, S))
 
     print(aircraft.lift_coefficient(opt_vars_maxobj, AR, S))
+    results = {
+    "Total Weight (kg)": aircraft.weight(opt_vars_maxobj, AR, S)["Total"] / 9.8,
+    "Center of Mass": aircraft.center_of_mass(opt_vars_maxobj, AR, S),
+    "Neutral Point": aircraft.neutral_point(opt_vars_maxobj, AR, S),
+    "Spiral Coefficient": aircraft.spiral_coeff(opt_vars_maxobj, AR, S),
+    "Vertical Tail Coefficient": aircraft.vertical_tail_coeff(opt_vars_maxobj, AR, S),
+    "Horizontal Tail Coefficient": aircraft.horizontal_tail_coeff(opt_vars_maxobj, AR, S),
+    "Lift Coefficient": aircraft.lift_coefficient(opt_vars_maxobj, AR, S),
+    }
 
-    
+    print("\n=== Aircraft Performance Summary ===")
+    for key, value in results.items():
+          print(f"{key:<30}: {value}")
+        
     print(opt_vars_maxobj)
+    print("Objective: %0.8f m/s" % obj_max)
+#     print(aircraft.mass_breakdown(opt_vars_maxobj, None, None))
+    aircraft.plot_plane(opt_vars_maxobj, None, None)
 #     print(opt_vars_maxobj)

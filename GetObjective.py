@@ -1,6 +1,8 @@
 from GetV import GetV
 
-def GetObjective(UEFC, opt_vars, AR, S):
+def GetObjective(UEFC, opt_vars):
+    AR = opt_vars[3]
+    S = opt_vars[4]
 
     # YOU SHOULD NOT NEED TO CHANGE THIS FUNCTION FOR THIS PROBLEM
 

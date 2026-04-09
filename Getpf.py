@@ -1,5 +1,7 @@
 
 def Getpf(UEFC, opt_vars, AR, S):
+    AR = opt_vars[3]
+    S = opt_vars[4]
 
     # Returns the total weight, as well as a breakdown, in N.
 
