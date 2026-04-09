@@ -47,6 +47,11 @@ def plot_plane_cg(UEFC, opt_vars, AR, S):
         plt.scatter(pos, 0, s=m*10000, alpha=0.8, edgecolors='black', zorder=3)
         plt.text(pos, 0.05, f"{label}\n{m:.3f}kg", ha='center', fontsize=8, rotation=45)
 
+    pos = UEFC.payload_loc(opt_vars)
+    m = 0.25
+    label="payload"
+    plt.scatter(pos, 0, s=m*10000, alpha=0.8, edgecolors='black', zorder=3)
+    plt.text(pos, 0.05, f"{label}\n{m:.3f}kg", ha='center', fontsize=8, rotation=45)
     # 4. Calculate Total CG
     cg_total = total_moment / total_mass
     
@@ -84,29 +89,31 @@ def GetMassBreakdown(UEFC, opt_vars, AR, S):
         "servos" : [0.016, 1.5 * c_bar],
         "boom" : [0.0389 * (opt_vars[1] - opt_vars[2]) *b /0.92,  (opt_vars[1] + opt_vars[2]) * b /2 ],
         "push_rods" : [.024 *  ( opt_vars[1] * b - 1.5 * c_bar )/ (0.92 - 0.17 - 1.5 * 0.15), ( 1.5 * c_bar + opt_vars[1] * b) /2],
-        "payload" : [0.25, opt_vars[5] * b]
     }
     return mass_breakdown
 
-def GetCOM(UEFC, opt_vars, AR, S):
+def GetPayloadLoc(UEFC, opt_vars, AR, S):
     AR = opt_vars[3]
     S = opt_vars[4]
 
     mass_breakdown = GetMassBreakdown(UEFC, opt_vars, AR, S)
+
     mass = 0
     com = 0
     for elem in mass_breakdown:
         mass += mass_breakdown[elem][0]
         com += mass_breakdown[elem][0] * mass_breakdown[elem][1]
 
-    return com/ mass 
+    com_real = UEFC.center_of_mass(opt_vars, None, None)
+
+    return ((mass + 0.25) * com_real - mass * com)/0.25
 
 def GetMass(UEFC, opt_vars, AR, S):
     AR = opt_vars[3]
     S = opt_vars[4]
 
     mass_breakdown = GetMassBreakdown(UEFC, opt_vars, AR, S)
-    mass = 0
+    mass = 0.25
     
     for elem in mass_breakdown:
         mass += mass_breakdown[elem][0]

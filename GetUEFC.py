@@ -13,6 +13,9 @@ from Getpf         import Getpf
 from GetCOM        import *
 from GetNP         import GetNP
 from GetStability  import *
+from Getalpha      import Getalpha
+from GetTailAngle  import GetTailAlpha
+from GetTailCOM    import GetTailCOM
 
 from GetV       import GetV
 from GetCL      import GetCL
@@ -68,6 +71,15 @@ class UEFC:
         self.g   = 9.81      # gravity, m/s^2
         self.R   = 12.5      # turn radius, meters. Track turn diameter / 2
         self.AR_h = 5
+
+        self.CL_nom = 0.65
+        self.Cm_nom = {
+            0.08: -0.17,
+            0.09: -0.16, 
+            0.10: -0.15,
+            0.11: -0.14,
+            0.12: -0.13
+        }
     # opt_vars is a vector representing the optimization variables
     # opt_vars[0]: Load factor (-)
 
@@ -83,7 +95,13 @@ class UEFC:
     
     def plot_plane(self, opt_vars, AR, S):
         plot_plane_cg(self, opt_vars, AR, S)
+
+    def tail_alpha(self, opt_vars):
+        return GetTailAlpha(self, opt_vars)
     
+    def alpha(self, opt_vars):
+        return Getalpha(self, opt_vars)
+
     def vertical_tail_coeff(self, opt_vars, AR, S):
         return GetVertTailVolume(self, opt_vars, AR, S)
     
@@ -104,6 +122,9 @@ class UEFC:
 
     def neutral_point(self, opt_vars, AR, S):
         return GetNP(self, opt_vars, AR, S)
+
+    def tail_COM(self, opt_vars):
+        return GetTailCOM(self, opt_vars)
 
     def mass(self, opt_vars, AR, S):
         return GetMass(self, opt_vars, AR, S)  # Total mass, and a breakdown (g)
@@ -128,12 +149,15 @@ class UEFC:
 
     def payload_drag_coefficient(self, opt_vars, AR, S):
         return GetCDpay(self, opt_vars, AR, S)  # Payload drag coefficient (-)
+    
+    def payload_loc(self, opt_vars):
+        return GetPayloadLoc(self, opt_vars, None, None)
 
     def drag_coefficient(self, opt_vars, AR, S):
         return GetCD(self, opt_vars, AR, S)  # Total drag coefficient; breakdown
     
     def center_of_mass(self, opt_vars, AR, S):
-        return GetCOM(self, opt_vars, AR, S)
+        return GetTailCOM(self, opt_vars)
 
     def max_camber(self):
         return Getepsilon(self)  # Maximum wing camber (-)

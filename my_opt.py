@@ -39,7 +39,7 @@ def opt_obj(UEFC):
     S_lowerBound = 0.05
     S_upperBound = 0.5
 
-    payload_loc = 0.2
+    payload_loc = 0
     payload_lower = -0.1
     payload_upper = 0.5
 
@@ -51,9 +51,9 @@ def opt_obj(UEFC):
     # mpay_lowerBound   = 0.01
     # mpay_upperBound   = 1000.
     
-    initialGuess = (N_initialGuess, l_AR_initialGuess, l_m_initialGuess, AR_initialGuess, S_initialGuess, payload_loc)
+    initialGuess = (N_initialGuess, l_AR_initialGuess, l_m_initialGuess, AR_initialGuess, S_initialGuess)
     
-    bounds       = Bounds(lb=(N_lowerBound, l_AR_lowerBound, l_m_lowerBound, AR_lowerBound, S_lowerBound, payload_lower), ub=(N_upperBound, l_AR_upperBound, l_m_upperBound, AR_upperBound, S_upperBound, payload_upper), keep_feasible=True)
+    bounds       = Bounds(lb=(N_lowerBound, l_AR_lowerBound, l_m_lowerBound, AR_lowerBound, S_lowerBound), ub=(N_upperBound, l_AR_upperBound, l_m_upperBound, AR_upperBound, S_upperBound), keep_feasible=True)
 
     # Constraint format is different, depending on algorithm.
     method = "SLSQP"
@@ -148,10 +148,10 @@ if __name__ == "__main__":
 
     aircraft.CLdes = 0.8
     aircraft.mpay_g = 250
-    aircraft.dihedral = 5
+    aircraft.dihedral = 10
     
-    aircraft.Sh = 0.03
-    aircraft.Sv = 0.01
+    aircraft.Sh = 0.04
+    aircraft.Sv = 0.03
     # print(aircraft.weight(1.1, AR, S)["Total"], "total")
     opt_vars_maxobj, obj_max, success = opt_obj(aircraft)
 
@@ -189,6 +189,11 @@ if __name__ == "__main__":
         
     print(opt_vars_maxobj)
     print("Objective: %0.8f m/s" % obj_max)
+    print("Alpha: %0.8f degrees" % aircraft.alpha(opt_vars_maxobj))
+    
+    print("Tail_COM: %0.8f m" % aircraft.tail_COM(opt_vars_maxobj))
+    
+    print("Payload_loc: %0.8f m" % aircraft.payload_loc(opt_vars_maxobj))
 #     print(aircraft.mass_breakdown(opt_vars_maxobj, None, None))
     aircraft.plot_plane(opt_vars_maxobj, None, None)
 #     print(opt_vars_maxobj)
