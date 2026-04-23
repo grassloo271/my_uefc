@@ -213,9 +213,10 @@ if __name__ == "__main__":
 # #     print(aircraft.mass_breakdown(opt_vars_maxobj, None, None))
 # (N_initialGuess, l_AR_initialGuess, l_m_initialGuess, AR_initialGuess, S_initialGuess, Sh_initialGuess, Sv_initialGuess)
     
-    # opt_vars_maxobj = [1.303, 0.4551/0.8426, -0.3/0.8426, 4, 0.1775, 0.033, 0.01]
-    # aircraft.taper = 0.98
-    # aircraft.AR_h =  8.7545
+    opt_vars_maxobj = [1.303, 0.436/0.9173, -0.2739/0.9173, 4.74, 0.1775, 0.0296, 0.0128]
+    aircraft.taper = 0.744
+    aircraft.dihedral = 7.14
+    aircraft.AR_h =  6.877
     aircraft.plot_plane(opt_vars_maxobj, None, None)
     print(GetObjective(aircraft, opt_vars_maxobj))
 
