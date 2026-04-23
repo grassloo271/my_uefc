@@ -14,7 +14,7 @@ from GetCOM        import *
 from GetNP         import GetNP
 from GetStability  import *
 from Getalpha      import Getalpha
-from GetTailAngle  import GetTailAlpha
+from GetTailAngle  import *
 from GetTailCOM    import GetTailCOM
 
 from GetV       import GetV
@@ -101,9 +101,15 @@ class UEFC:
     
     def alpha(self, opt_vars):
         return Getalpha(self, opt_vars)
+    
+    def alpha_tail(self, opt_vars, decalage_angle):
+        return GetAlphaTail(self, opt_vars, decalage_angle)
 
     def vertical_tail_coeff(self, opt_vars, AR, S):
         return GetVertTailVolume(self, opt_vars, AR, S)
+    
+    def isStable(self, opt_vars, tail_angle):
+        return isStable(self, opt_vars, tail_angle)
     
     def spiral_coeff(self, opt_vars, AR, S):
         return GetSpiral(self, opt_vars, AR, S)
@@ -123,8 +129,8 @@ class UEFC:
     def neutral_point(self, opt_vars, AR, S):
         return GetNP(self, opt_vars, AR, S)
 
-    def tail_COM(self, opt_vars):
-        return GetTailCOM(self, opt_vars)
+    def tail_COM(self, opt_vars, tail_angle = None):
+        return GetTailCOM(self, opt_vars, tail_angle)
 
     def mass(self, opt_vars, AR, S):
         return GetMass(self, opt_vars, AR, S)  # Total mass, and a breakdown (g)
@@ -150,8 +156,8 @@ class UEFC:
     def payload_drag_coefficient(self, opt_vars, AR, S):
         return GetCDpay(self, opt_vars, AR, S)  # Payload drag coefficient (-)
     
-    def payload_loc(self, opt_vars):
-        return GetPayloadLoc(self, opt_vars, None, None)
+    def payload_loc(self, opt_vars, tail_angle = None):
+        return GetPayloadLoc(self, opt_vars, tail_angle)
 
     def drag_coefficient(self, opt_vars, AR, S):
         return GetCD(self, opt_vars, AR, S)  # Total drag coefficient; breakdown

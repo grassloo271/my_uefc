@@ -19,7 +19,8 @@ def plot_plane_cg(UEFC, opt_vars, AR, S):
                              linewidth=2, edgecolor='blue', facecolor='skyblue', 
                              alpha=0.3, label='Wing Planform')
     
-    Sh = UEFC.Sh
+    Sh = opt_vars[5]
+    Sv = opt_vars[6]
     span_t = np.sqrt(Sh * UEFC.AR_h)
     chord_t = np.sqrt(Sh / UEFC.AR_h)
     tail_pos = mass_dict["tail"][1]
@@ -53,9 +54,12 @@ def plot_plane_cg(UEFC, opt_vars, AR, S):
     plt.scatter(pos, 0, s=m*10000, alpha=0.8, edgecolors='black', zorder=3)
     plt.text(pos, 0.05, f"{label}\n{m:.3f}kg", ha='center', fontsize=8, rotation=45)
     # 4. Calculate Total CG
-    cg_total = total_moment / total_mass
+    cg_total = UEFC.tail_COM(opt_vars)
+    n_p = UEFC.neutral_point(opt_vars, AR, S)
     
     # Draw CG Marker
+    
+    plt.axvline(n_p, color='blue', linestyle='--', alpha=0.7)
     plt.axvline(cg_total, color='red', linestyle='--', alpha=0.7)
     plt.scatter(cg_total, 0, color='red', marker='X', s=250, label=f'Total CG: {cg_total:.3f}m', zorder=4)
 
@@ -79,11 +83,12 @@ def GetMassBreakdown(UEFC, opt_vars, AR, S):
 
     c_bar = UEFC.wing_dimensions(opt_vars, AR, S)["Mean chord"]
     b = UEFC.wing_dimensions(opt_vars, AR, S)["Span"]
-
+    Sh = opt_vars[5]
+    Sv = opt_vars[6]
     mass_breakdown = {
         #"object" : [mass, position]
         "wing" : [UEFC.wing_weight(opt_vars, AR, S) / 9.8, 0.25 * c_bar],
-        "tail" : [(UEFC.Sh + UEFC.Sv) * 0.014 / 0.07, opt_vars[1] * b],
+        "tail" : [(Sh + Sv) * 0.014 / 0.07, opt_vars[1] * b],
         "motor" : [0.0809 + 0.013, opt_vars[2] * b],
         "radio + batt" : [0.132 + 0.0091+ 0.012, 0.5 * c_bar], 
         "servos" : [0.016, 1.5 * c_bar],
@@ -92,7 +97,7 @@ def GetMassBreakdown(UEFC, opt_vars, AR, S):
     }
     return mass_breakdown
 
-def GetPayloadLoc(UEFC, opt_vars, AR, S):
+def GetPayloadLoc(UEFC, opt_vars, tail_angle = None):
     AR = opt_vars[3]
     S = opt_vars[4]
 
@@ -104,7 +109,7 @@ def GetPayloadLoc(UEFC, opt_vars, AR, S):
         mass += mass_breakdown[elem][0]
         com += mass_breakdown[elem][0] * mass_breakdown[elem][1]
 
-    com_real = UEFC.center_of_mass(opt_vars, None, None)
+    com_real = UEFC.tail_COM(opt_vars, tail_angle)
 
     return ((mass + 0.25) * com_real - mass * com)/0.25
 

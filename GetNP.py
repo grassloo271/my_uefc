@@ -1,6 +1,8 @@
 import numpy as np
 
 def GetNP(UEFC, opt_vars, AR, S):
+    Sh = opt_vars[5]
+    Sv = opt_vars[6]
     AR = opt_vars[3]
     S = opt_vars[4]
 
@@ -11,6 +13,6 @@ def GetNP(UEFC, opt_vars, AR, S):
 
     l_h = b * opt_vars[1]
 
-    V_h = UEFC.Sh * l_h / (S * c)
+    V_h = Sh * l_h / (S * c)
     
     return (a_w/(4*a_h) + V_h *(1+c/(4*l_h)))/(a_w/a_h + V_h*c/l_h) * UEFC.wing_dimensions(opt_vars, AR, S)["Mean chord"]
