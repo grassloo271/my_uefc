@@ -1,6 +1,8 @@
 import numpy as np
 
 def GetRequiredThrust(UEFC, opt_vars, AR, S):
+    AR = opt_vars[3]
+    S = opt_vars[4]
 
     # Calculate the required thrust from UEFC parameters and opt_vars, AR, S
     rho = UEFC.rho

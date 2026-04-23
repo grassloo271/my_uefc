@@ -1,7 +1,9 @@
 import numpy as np
 # from GetUEFC import UEFC
 
-def GetWingWeight(UEFC, AR, S):
+def GetWingWeight(UEFC, opt_vars, AR, S):
+    AR = opt_vars[3]
+    S = opt_vars[4]
 
     # YOU SHOULD NOT NEED TO CHANGE THIS FILE FOR THIS PROBLEM
     

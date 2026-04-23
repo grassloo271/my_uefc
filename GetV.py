@@ -1,6 +1,9 @@
 import numpy as np
 
 def GetV(UEFC, opt_vars, AR, S):
+    AR = opt_vars[3]
+    S = opt_vars[4]
+
 
     # Calculate speed from N, g, R during a level turn.
     # N = load factor = Lift / Weight.

@@ -13,6 +13,9 @@ from Getpf         import Getpf
 from GetCOM        import *
 from GetNP         import GetNP
 from GetStability  import *
+from Getalpha      import Getalpha
+from GetTailAngle  import *
+from GetTailCOM    import GetTailCOM
 
 from GetV       import GetV
 from GetCL      import GetCL
@@ -68,6 +71,15 @@ class UEFC:
         self.g   = 9.81      # gravity, m/s^2
         self.R   = 12.5      # turn radius, meters. Track turn diameter / 2
         self.AR_h = 5
+
+        self.CL_nom = 0.65
+        self.Cm_nom = {
+            0.08: -0.17,
+            0.09: -0.16, 
+            0.10: -0.15,
+            0.11: -0.14,
+            0.12: -0.13
+        }
     # opt_vars is a vector representing the optimization variables
     # opt_vars[0]: Load factor (-)
 
@@ -75,18 +87,36 @@ class UEFC:
     def fuselage_weight(self, opt_vars, AR, S):
         return GetWfuse(self, opt_vars, AR, S)  # Fuselage weight (N)
 
-    def wing_weight(self, AR, S):
-        return GetWingWeight(self, AR, S)  # Wing weight (N)
+    def wing_weight(self, opt_vars, AR, S):
+        return GetWingWeight(self, opt_vars, AR, S)  # Wing weight (N)
     
     def horizontal_tail_coeff(self, opt_vars, AR, S):
         return GetHorTailVolume(self, opt_vars, AR, S)
     
+    def plot_plane(self, opt_vars, AR, S):
+        plot_plane_cg(self, opt_vars, AR, S)
+
+    def tail_alpha(self, opt_vars):
+        return GetTailAlpha(self, opt_vars)
+    
+    def alpha(self, opt_vars):
+        return Getalpha(self, opt_vars)
+    
+    def alpha_tail(self, opt_vars, decalage_angle):
+        return GetAlphaTail(self, opt_vars, decalage_angle)
+
     def vertical_tail_coeff(self, opt_vars, AR, S):
         return GetVertTailVolume(self, opt_vars, AR, S)
     
+    def isStable(self, opt_vars, tail_angle):
+        return isStable(self, opt_vars, tail_angle)
+    
     def spiral_coeff(self, opt_vars, AR, S):
         return GetSpiral(self, opt_vars, AR, S)
-
+    
+    def mass_breakdown(self, opt_vars, AR, S):
+        return GetMassBreakdown(self, opt_vars, AR, S)
+    
     def payload_weight(self, opt_vars, AR, S):
         return GetWpay(self, opt_vars, AR, S)  # Payload weight (N)
 
@@ -98,6 +128,9 @@ class UEFC:
 
     def neutral_point(self, opt_vars, AR, S):
         return GetNP(self, opt_vars, AR, S)
+
+    def tail_COM(self, opt_vars, tail_angle = None):
+        return GetTailCOM(self, opt_vars, tail_angle)
 
     def mass(self, opt_vars, AR, S):
         return GetMass(self, opt_vars, AR, S)  # Total mass, and a breakdown (g)
@@ -122,12 +155,15 @@ class UEFC:
 
     def payload_drag_coefficient(self, opt_vars, AR, S):
         return GetCDpay(self, opt_vars, AR, S)  # Payload drag coefficient (-)
+    
+    def payload_loc(self, opt_vars, tail_angle = None):
+        return GetPayloadLoc(self, opt_vars, tail_angle)
 
     def drag_coefficient(self, opt_vars, AR, S):
         return GetCD(self, opt_vars, AR, S)  # Total drag coefficient; breakdown
     
     def center_of_mass(self, opt_vars, AR, S):
-        return GetCOM(self, opt_vars, AR, S)
+        return GetTailCOM(self, opt_vars)
 
     def max_camber(self):
         return Getepsilon(self)  # Maximum wing camber (-)
@@ -144,8 +180,8 @@ class UEFC:
     def excess_thrust(self, opt_vars, AR, S):  # Maximum - required thrust (N)
         return GetExcessThrust(self, opt_vars, AR, S)
 
-    def wing_dimensions(self, AR, S):
-        return GetWingDimensions(self, AR, S)
+    def wing_dimensions(self, opt_vars, AR, S):
+        return GetWingDimensions(self, opt_vars, AR, S)
 
     def turn_rate(self, opt_vars, AR, S):  # Turn rate (rad/s)
         return GetOmega(self, opt_vars, AR, S)

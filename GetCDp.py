@@ -1,6 +1,8 @@
 import numpy as np
 
 def GetCDp(UEFC, opt_vars, AR, S):
+    AR = opt_vars[3]
+    S = opt_vars[4]
 
     # YOU SHOULD NOT NEED TO CHANGE THIS FILE FOR THIS PROBLEM
     tau      = UEFC.tau
@@ -17,7 +19,7 @@ def GetCDp(UEFC, opt_vars, AR, S):
 
     CL   = UEFC.lift_coefficient(opt_vars, AR, S)
     V    = UEFC.flight_velocity(opt_vars, AR, S)
-    cbar = UEFC.wing_dimensions(AR, S)["Mean chord"]
+    cbar = UEFC.wing_dimensions(opt_vars, AR, S)["Mean chord"]
     Re   = (UEFC.rho * V * cbar) / UEFC.mu  # Reynolds number
 
     cl2d   = CL/np.cos(dihedral)

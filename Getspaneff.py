@@ -1,6 +1,8 @@
 import numpy as np
 
 def Getspaneff(UEFC, opt_vars, AR, S):
+    AR = opt_vars[3]
+    S = opt_vars[4]
 
     # YOU SHOULD NOT NEED TO CHANGE THIS FILE FOR THIS PROBLEM
     
@@ -9,7 +11,7 @@ def Getspaneff(UEFC, opt_vars, AR, S):
     
     N = opt_vars[0]
     R = UEFC.R
-    b = UEFC.wing_dimensions(AR, S)["Span"]
+    b = UEFC.wing_dimensions(opt_vars, AR, S)["Span"]
     
     rbar = 0.5*b/R/N
     

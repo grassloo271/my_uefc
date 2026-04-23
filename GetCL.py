@@ -1,5 +1,7 @@
 import numpy as np
 def GetCL(UEFC, opt_vars, AR, S):
+    AR = opt_vars[3]
+    S = opt_vars[4]
 
     # You need to finish this file
 

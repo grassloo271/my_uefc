@@ -1,6 +1,10 @@
 import numpy as np
 def GetWfuse(UEFC, opt_vars, AR, S):
+    AR = opt_vars[3]
+    S = opt_vars[4]
 
+    Sh = opt_vars[5]
+    Sv = opt_vars[6]
     # You need to finish this file
 
     # YOU MAY NEED TO ADJUST THE CONSTANTS TO BETTER FIT YOUR ESTIMATED
@@ -16,13 +20,13 @@ def GetWfuse(UEFC, opt_vars, AR, S):
     S0 = 0.354         # Wing area for which mfuseS were calculated (m^2)
     St0 = 0.04 + 0.03  # Tail area for which mfuset were calculated (m^2)
 
-    b = UEFC.wing_dimensions(AR, S)["Span"] # wingspan thta corresponds to the given AR and S
+    b = UEFC.wing_dimensions(opt_vars, AR, S)["Span"] # wingspan thta corresponds to the given AR and S
     l_AR = opt_vars[1] - opt_vars[2]  # Fuselage wingspan to length ratio (-)
     l = b/l_AR        # fuselage length (m)
 
 
-    Sh = UEFC.Sh      # area of horizontal tail (m^2)
-    Sv = UEFC.Sv      # area of vertical tail (m^2)
+    # Sh = UEFC.Sh      # area of horizontal tail (m^2)
+    # Sv = UEFC.Sv      # area of vertical tail (m^2)
     St = Sh + Sv      # total tail area (m^2)
 
     # Calculate Wfuse from the given variables

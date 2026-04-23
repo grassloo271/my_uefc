@@ -1,6 +1,8 @@
 import numpy as np
 
 def GetCDfuse(UEFC, opt_vars, AR, S):
+    AR = opt_vars[3]
+    S = opt_vars[4]
 
     # You need to finish this file
 
