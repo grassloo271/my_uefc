@@ -20,6 +20,7 @@ def Getdb(UEFC, opt_vars, AR, S):
          (1+l)**3*(1+2*l)*AR**3/S)
 
     return db
+
 def stupiddb(AR, S, F):
     l       = 0
     tau     = 0.001/ 0.0656
@@ -32,4 +33,4 @@ def stupiddb(AR, S, F):
 
     return db
 
-print(stupiddb(6.877, 0.0296, 1))
+print(stupiddb(8.7, 0.033, 2.5))

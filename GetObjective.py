@@ -37,8 +37,8 @@ def GetObjective(UEFC, opt_vars):
         last_stable = stable_indices[-1]
         payload_diff = payload_loc[first_stable] - payload_loc[last_stable]
     
-    
-    obj = (-payload_diff * (1 - np.log10(0.8) + np.log10(UEFC.payload_fraction(opt_vars, None, None))) / 0.11621545  ) +( v/11.14)
+    obj = v
+    # obj = (-payload_diff * (1 - np.log10(0.8) + np.log10(UEFC.payload_fraction(opt_vars, None, None))) / 0.11621545  ) +( v/11.14)
     # obj = -payload_diff * (1 - np.log10(0.8) + np.log10(UEFC.payload_fraction(opt_vars, None, None))) 
     
     return obj
